@@ -78,10 +78,11 @@ class Entity extends EntityReference {
      * @param String $_logicalName Allows constructing arbitrary Entities by setting the EntityLogicalName directly
      * @param String $IDorKeyAttributes Allows constructing arbitrary Entities by setting the EntityLogicalName directly
      * @param array $columnSet List of Entity fields to retrieve
+     * @param array $newPropertyValues
      *
      * @internal param AlexaCRM\CRMToolkit\AlexaSDK $_auth Connection to the Dynamics CRM server - should be active already.
      */
-    public function __construct( Client $_client, $_logicalName = null, $IDorKeyAttributes = null, $columnSet = null ) {
+    public function __construct( Client $_client, $_logicalName = null, $IDorKeyAttributes = null, $columnSet = null, $newPropertyValues = [] ) {
         try {
             /* Store AlexaCRM\CRMToolkit\AlexaSDK object */
             $this->client = $_client;
@@ -102,8 +103,8 @@ class Entity extends EntityReference {
             /* Setup property values from entity metadata attributes */
             foreach ( $this->attributes as $attribute ) {
                 $this->propertyValues[ $attribute->logicalName ] = Array(
-                    'Value'   => null,
-                    'Changed' => false,
+                    'Value'   => isset($newPropertyValues[$attribute->logicalName]) ? $newPropertyValues[$attribute->logicalName] : '',
+                    'Changed' => isset($newPropertyValues[$attribute->logicalName]) ? true : false,
                 );
             }
             /* Check the ID or AlexaCRM\CRMToolkit\KeyAttributes to retrieve the entity values */
